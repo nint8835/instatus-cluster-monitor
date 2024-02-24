@@ -3,6 +3,8 @@ module github.com/nint8835/instatus-cluster-monitor
 go 1.21.0
 
 require (
+	github.com/joho/godotenv v1.5.1
+	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/rs/zerolog v1.32.0
 	github.com/spf13/cobra v1.8.0
 )
