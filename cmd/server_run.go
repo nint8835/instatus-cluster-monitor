@@ -1,11 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/nint8835/instatus-cluster-monitor/pkg/config"
+	"github.com/nint8835/instatus-cluster-monitor/pkg/server"
 )
 
 var serverRunCmd = &cobra.Command{
@@ -16,7 +15,10 @@ var serverRunCmd = &cobra.Command{
 		serverCfg, err := config.LoadServerConfig()
 		checkError(err, "failed to load server configuration")
 
-		fmt.Printf("%#+v\n", serverCfg)
+		serverInst := server.New(serverCfg)
+
+		err = serverInst.Start()
+		checkError(err, "failed to start server")
 	},
 }
 

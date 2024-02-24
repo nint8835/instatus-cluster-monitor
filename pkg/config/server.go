@@ -6,6 +6,9 @@ import (
 
 type ServerConfig struct {
 	SharedConfig
+
+	// ListenAddress is the address to listen on
+	ListenAddress string `split_words:"true" default:":8080"`
 }
 
 func LoadServerConfig() (*ServerConfig, error) {

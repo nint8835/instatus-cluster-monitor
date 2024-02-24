@@ -12,7 +12,11 @@ import (
 )
 
 type SharedConfig struct {
+	// LogLevel is the log level to use
 	LogLevel string `split_words:"true" default:"info"`
+
+	// SharedSecret is the secret to use to authenticate with the server
+	SharedSecret string `split_words:"true" required:"true"`
 }
 
 func initLoggingConfig(config SharedConfig) error {
