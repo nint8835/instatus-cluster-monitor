@@ -32,10 +32,12 @@ const (
 )
 
 type HostStatus struct {
-	Status     Status `json:"status"`
-	LastStatus Status `json:"-"`
+	Status Status `json:"status"`
 
 	ReportedAt time.Time `json:"reported_at"`
+
+	lastStatus  Status
+	componentId string
 }
 
 type Server struct {
@@ -77,17 +79,42 @@ func (s *Server) monitorStatuses(ctx context.Context) {
 					status.Status = StatusUnhealthy
 				}
 
-				if status.Status == status.LastStatus {
+				if status.Status == status.lastStatus {
 					return true
 				}
 
 				log.Info().
 					Str("identifier", identifier).
-					Str("last_status", string(status.LastStatus)).
+					Str("last_status", string(status.lastStatus)).
 					Str("status", string(status.Status)).
 					Msg("Host status changed")
 
-				status.LastStatus = status.Status
+				if status.componentId == "" {
+					log.Debug().Str("identifier", identifier).Msg("Component ID not cached, fetching components")
+
+					components, err := s.instatusClient.GetComponents(instatus_go.GetComponentsRequest{
+						PageId: s.instatusPageId,
+					})
+					if err != nil {
+						log.Error().Err(err).Msg("Error getting components")
+						return false
+					}
+
+					for _, component := range components {
+						if component.Name == identifier {
+							log.Debug().Str("identifier", identifier).Str("component_id", component.Id).Msg("Component ID found")
+							status.componentId = component.Id
+							break
+						}
+					}
+
+					if status.componentId == "" {
+						log.Info().Str("identifier", identifier).Msg("Component ID not found, creating component for host")
+						// TODO: Create component
+					}
+				}
+
+				status.lastStatus = status.Status
 				return true
 			})
 		}
