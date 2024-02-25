@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"time"
 )
 
 type ServerConfig struct {
@@ -9,6 +10,12 @@ type ServerConfig struct {
 
 	// ListenAddress is the address to listen on
 	ListenAddress string `split_words:"true" default:":8080"`
+
+	// UnhealthyTime is the amount of time since last ping before a host is marked unhealthy
+	UnhealthyTime time.Duration `split_words:"true" default:"5m"`
+
+	// UpdateFrequency is the amount of time between status updates
+	UpdateFrequency time.Duration `split_words:"true" default:"1m"`
 }
 
 func LoadServerConfig() (*ServerConfig, error) {
