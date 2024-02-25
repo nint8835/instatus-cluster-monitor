@@ -114,7 +114,24 @@ func (s *Server) monitorStatuses(ctx context.Context) {
 					}
 				}
 
+				currentComponent, err := s.instatusClient.GetComponent(instatus_go.GetComponentRequest{
+					PageId:      s.instatusPageId,
+					ComponentId: status.componentId,
+				})
+				if err != nil {
+					log.Error().Err(err).Msg("Error getting current component status")
+					return false
+				}
+
+				log.Debug().Interface("current_component", currentComponent).Msg("Current component")
+
 				status.lastStatus = status.Status
+
+				if currentComponent.Status == "UNDERMAINTENANCE" {
+					log.Debug().Str("identifier", identifier).Msg("Component is under maintenance, skipping status update")
+					return true
+				}
+
 				return true
 			})
 		}

@@ -7,7 +7,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo/v4 v4.11.4
-	github.com/nint8835/instatus-go v0.0.0-20240225232314-8fe53b9211bf
+	github.com/nint8835/instatus-go v0.0.0-20240225233538-050c114b5765
 	github.com/rs/zerolog v1.32.0
 	github.com/spf13/cobra v1.8.0
 )
