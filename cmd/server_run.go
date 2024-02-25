@@ -15,7 +15,8 @@ var serverRunCmd = &cobra.Command{
 		serverCfg, err := config.LoadServerConfig()
 		checkError(err, "failed to load server configuration")
 
-		serverInst := server.New(serverCfg)
+		serverInst, err := server.New(serverCfg)
+		checkError(err, "failed to create server instance")
 
 		err = serverInst.Start()
 		checkError(err, "failed to start server")

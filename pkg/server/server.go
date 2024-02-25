@@ -2,12 +2,14 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"sync"
 	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	instatus_go "github.com/nint8835/instatus-go"
 	"github.com/rs/zerolog/log"
 
 	"github.com/nint8835/instatus-cluster-monitor/pkg/config"
@@ -39,6 +41,9 @@ type HostStatus struct {
 type Server struct {
 	config   *config.ServerConfig
 	echoInst *echo.Echo
+
+	instatusClient *instatus_go.Client
+	instatusPageId string
 
 	statuses sync.Map
 }
@@ -132,11 +137,29 @@ func (s *Server) handlePing(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]any{})
 }
 
-func New(c *config.ServerConfig) *Server {
+func New(c *config.ServerConfig) (*Server, error) {
 	echoInst := echo.New()
 	serverInst := &Server{
-		config:   c,
-		echoInst: echoInst,
+		config:         c,
+		echoInst:       echoInst,
+		instatusClient: instatus_go.New(c.InstatusKey),
+	}
+
+	pages, err := serverInst.instatusClient.GetPages(instatus_go.GetPagesRequest{})
+	if err != nil {
+		return nil, fmt.Errorf("error listing pages: %w", err)
+	}
+
+	for _, page := range pages {
+		if page.Subdomain == c.TargetSubdomain {
+			log.Debug().Str("subdomain", c.TargetSubdomain).Str("id", page.Id).Msg("Found target subdomain")
+			serverInst.instatusPageId = page.Id
+			break
+		}
+	}
+
+	if serverInst.instatusPageId == "" {
+		return nil, fmt.Errorf("target subdomain not found")
 	}
 
 	echoInst.HideBanner = true
@@ -145,5 +168,5 @@ func New(c *config.ServerConfig) *Server {
 	echoInst.GET("/statuses", serverInst.getStatuses)
 	echoInst.POST("/ping", serverInst.requireAuth(serverInst.handlePing))
 
-	return serverInst
+	return serverInst, nil
 }

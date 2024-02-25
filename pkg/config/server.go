@@ -16,6 +16,12 @@ type ServerConfig struct {
 
 	// UpdateFrequency is the amount of time between status updates
 	UpdateFrequency time.Duration `split_words:"true" default:"1m"`
+
+	// InstatusKey is the API key for Instatus
+	InstatusKey string `split_words:"true" required:"true"`
+
+	// InstatusTargetSubdomain is the Instatus subdomain to submit statuses to
+	TargetSubdomain string `split_words:"true" required:"true"`
 }
 
 func LoadServerConfig() (*ServerConfig, error) {
