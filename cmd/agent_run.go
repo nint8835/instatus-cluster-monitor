@@ -1,10 +1,13 @@
 package cmd
 
 import (
-	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/spf13/cobra"
 
+	"github.com/nint8835/instatus-cluster-monitor/pkg/agent"
 	"github.com/nint8835/instatus-cluster-monitor/pkg/config"
 )
 
@@ -16,7 +19,16 @@ var agentRunCmd = &cobra.Command{
 		agentCfg, err := config.LoadAgentConfig()
 		checkError(err, "failed to load agent configuration")
 
-		fmt.Printf("%#+v\n", agentCfg)
+		agentInst, err := agent.New(agentCfg)
+		checkError(err, "failed to create agent")
+
+		agentInst.Start()
+
+		sc := make(chan os.Signal, 1)
+		signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+		<-sc
+
+		agentInst.Stop()
 	},
 }
 

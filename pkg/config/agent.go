@@ -2,10 +2,17 @@ package config
 
 import (
 	"fmt"
+	"time"
 )
 
 type AgentConfig struct {
 	SharedConfig
+
+	// PingFrequency is the amount of time between pings
+	PingFrequency time.Duration `split_words:"true" default:"1m"`
+
+	// ServerAddress is the address of the server to ping
+	ServerAddress string `split_words:"true" required:"true"`
 }
 
 func LoadAgentConfig() (*AgentConfig, error) {
