@@ -3,7 +3,9 @@ package agent
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -33,8 +35,7 @@ func (a *Agent) run() {
 			log.Debug().Msg("Pinging")
 
 			reqBody := server.PingBody{
-				// TODO: Select identifier
-				Identifier: "Host",
+				Identifier: a.config.HostIdentifier,
 			}
 
 			bodyBytes, err := json.Marshal(reqBody)
@@ -70,6 +71,16 @@ func (a *Agent) Start() {
 }
 
 func New(c *config.AgentConfig) (*Agent, error) {
+	if c.HostIdentifier == "" {
+		hostname, err := os.Hostname()
+		if err != nil {
+			return nil, fmt.Errorf("error getting hostname: %w", err)
+		}
+		c.HostIdentifier = hostname
+
+		log.Debug().Str("identifier", c.HostIdentifier).Msg("Using hostname as identifier")
+	}
+
 	return &Agent{
 		config:   c,
 		stopChan: make(chan struct{}),

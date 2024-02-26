@@ -13,6 +13,10 @@ type AgentConfig struct {
 
 	// ServerAddress is the address of the server to ping
 	ServerAddress string `split_words:"true" required:"true"`
+
+	// HostIdentifier is the identifier for this host.
+	// If omitted, the host's hostname will be used.
+	HostIdentifier string `split_words:"true"`
 }
 
 func LoadAgentConfig() (*AgentConfig, error) {
