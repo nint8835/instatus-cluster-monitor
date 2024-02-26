@@ -37,6 +37,8 @@ github.com/nint8835/instatus-go v0.0.0-20240225232314-8fe53b9211bf h1:wOpXMbfBAt
 github.com/nint8835/instatus-go v0.0.0-20240225232314-8fe53b9211bf/go.mod h1:wDyLS68x1XOSX4itoetnnIsfVgAjxbjraAXpjbQfhSA=
 github.com/nint8835/instatus-go v0.0.0-20240225233538-050c114b5765 h1:vZiYohys9XV62EgdHAUl7+gNH1wYejoQ2CscGWzZdTI=
 github.com/nint8835/instatus-go v0.0.0-20240225233538-050c114b5765/go.mod h1:wDyLS68x1XOSX4itoetnnIsfVgAjxbjraAXpjbQfhSA=
+github.com/nint8835/instatus-go v0.0.0-20240225235531-55b0a3f8ce62 h1:i8qYZCoF2wR4E7f5ZgaN11wsTwHQdgv8ZV+9HuHhwI8=
+github.com/nint8835/instatus-go v0.0.0-20240225235531-55b0a3f8ce62/go.mod h1:wDyLS68x1XOSX4itoetnnIsfVgAjxbjraAXpjbQfhSA=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

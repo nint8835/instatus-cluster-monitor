@@ -31,6 +31,11 @@ const (
 	StatusUnhealthy Status = "unhealthy"
 )
 
+var instatusStatusMap = map[Status]string{
+	StatusHealthy:   "OPERATIONAL",
+	StatusUnhealthy: "MAJOROUTAGE",
+}
+
 type HostStatus struct {
 	Status Status `json:"status"`
 
@@ -92,6 +97,7 @@ func (s *Server) monitorStatuses(ctx context.Context) {
 				if status.componentId == "" {
 					log.Debug().Str("identifier", identifier).Msg("Component ID not cached, fetching components")
 
+					// TODO: Don't re-fetch on every component - rate limit is 30 requests / 5 minutes (6 requests per minute)
 					components, err := s.instatusClient.GetComponents(instatus_go.GetComponentsRequest{
 						PageId: s.instatusPageId,
 					})
@@ -123,14 +129,28 @@ func (s *Server) monitorStatuses(ctx context.Context) {
 					return false
 				}
 
-				log.Debug().Interface("current_component", currentComponent).Msg("Current component")
-
 				status.lastStatus = status.Status
 
 				if currentComponent.Status == "UNDERMAINTENANCE" {
 					log.Debug().Str("identifier", identifier).Msg("Component is under maintenance, skipping status update")
 					return true
 				}
+
+				newStatus := instatusStatusMap[status.Status]
+
+				_, err = s.instatusClient.UpdateComponent(instatus_go.UpdateComponentRequest{
+					PageId:      s.instatusPageId,
+					ComponentId: status.componentId,
+					UpdatedFields: instatus_go.UpdateComponentFields{
+						Status: &newStatus,
+					},
+				})
+				if err != nil {
+					log.Error().Err(err).Msg("Error updating component status")
+					return false
+				}
+
+				log.Debug().Str("identifier", identifier).Str("status", string(status.Status)).Msg("Component status updated")
 
 				return true
 			})
