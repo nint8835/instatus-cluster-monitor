@@ -111,7 +111,23 @@ func (s *Server) monitorStatuses(ctx context.Context) {
 
 				if componentId == "" {
 					log.Debug().Str("identifier", identifier).Msg("Component ID not found, creating component")
-					// TODO: Create component
+
+					component, err := s.instatusClient.CreateComponent(instatus_go.CreateComponentRequest{
+						PageId: s.instatusPageId,
+
+						Fields: instatus_go.CreateComponentFields{
+							Name:       identifier,
+							ShowUptime: ptr(true),
+							StartDate:  ptr(time.Now().UTC()),
+						},
+					})
+					if err != nil {
+						log.Error().Err(err).Msg("Error creating component")
+						return false
+					}
+
+					componentId = component.Id
+					identifierComponents[identifier] = componentId
 				}
 
 				currentComponent, err := s.instatusClient.GetComponent(instatus_go.GetComponentRequest{

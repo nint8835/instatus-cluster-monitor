@@ -31,14 +31,8 @@ github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/
 github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
-github.com/nint8835/instatus-go v0.0.0-20240225230047-b21863857528 h1:+QXFbr5lXZkS8PVpYEnB3Ww0mgLGih0IO5ELllCwX+Y=
-github.com/nint8835/instatus-go v0.0.0-20240225230047-b21863857528/go.mod h1:wDyLS68x1XOSX4itoetnnIsfVgAjxbjraAXpjbQfhSA=
-github.com/nint8835/instatus-go v0.0.0-20240225232314-8fe53b9211bf h1:wOpXMbfBAtKvdib4LLPZoQ6zCICtH0oFZQtUsIBSkaA=
-github.com/nint8835/instatus-go v0.0.0-20240225232314-8fe53b9211bf/go.mod h1:wDyLS68x1XOSX4itoetnnIsfVgAjxbjraAXpjbQfhSA=
-github.com/nint8835/instatus-go v0.0.0-20240225233538-050c114b5765 h1:vZiYohys9XV62EgdHAUl7+gNH1wYejoQ2CscGWzZdTI=
-github.com/nint8835/instatus-go v0.0.0-20240225233538-050c114b5765/go.mod h1:wDyLS68x1XOSX4itoetnnIsfVgAjxbjraAXpjbQfhSA=
-github.com/nint8835/instatus-go v0.0.0-20240225235531-55b0a3f8ce62 h1:i8qYZCoF2wR4E7f5ZgaN11wsTwHQdgv8ZV+9HuHhwI8=
-github.com/nint8835/instatus-go v0.0.0-20240225235531-55b0a3f8ce62/go.mod h1:wDyLS68x1XOSX4itoetnnIsfVgAjxbjraAXpjbQfhSA=
+github.com/nint8835/instatus-go v0.0.0-20240226225702-73f4ad7ac8ea h1:TT2zvwAA6biwJegEPIW7OEGm/RilB8+ucPJrR5aw9ZA=
+github.com/nint8835/instatus-go v0.0.0-20240226225702-73f4ad7ac8ea/go.mod h1:wDyLS68x1XOSX4itoetnnIsfVgAjxbjraAXpjbQfhSA=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

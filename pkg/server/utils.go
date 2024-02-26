@@ -16,3 +16,7 @@ func (s *Server) requireAuth(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func ptr[T any](v T) *T {
+	return &v
+}
