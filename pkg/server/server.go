@@ -41,8 +41,7 @@ type HostStatus struct {
 
 	ReportedAt time.Time `json:"reported_at"`
 
-	lastStatus  Status
-	componentId string
+	lastStatus Status
 }
 
 type Server struct {
@@ -67,6 +66,20 @@ func (s *Server) Start() error {
 func (s *Server) monitorStatuses(ctx context.Context) {
 	ticker := time.NewTicker(s.config.UpdateFrequency)
 	defer ticker.Stop()
+
+	identifierComponents := make(map[string]string)
+
+	components, err := s.instatusClient.GetComponents(instatus_go.GetComponentsRequest{
+		PageId: s.instatusPageId,
+	})
+	if err != nil {
+		log.Error().Err(err).Msg("Error getting components")
+		return
+	}
+
+	for _, component := range components {
+		identifierComponents[component.Name] = component.Id
+	}
 
 	for {
 		select {
@@ -94,35 +107,16 @@ func (s *Server) monitorStatuses(ctx context.Context) {
 					Str("status", string(status.Status)).
 					Msg("Host status changed")
 
-				if status.componentId == "" {
-					log.Debug().Str("identifier", identifier).Msg("Component ID not cached, fetching components")
+				componentId := identifierComponents[identifier]
 
-					// TODO: Don't re-fetch on every component - rate limit is 30 requests / 5 minutes (6 requests per minute)
-					components, err := s.instatusClient.GetComponents(instatus_go.GetComponentsRequest{
-						PageId: s.instatusPageId,
-					})
-					if err != nil {
-						log.Error().Err(err).Msg("Error getting components")
-						return false
-					}
-
-					for _, component := range components {
-						if component.Name == identifier {
-							log.Debug().Str("identifier", identifier).Str("component_id", component.Id).Msg("Component ID found")
-							status.componentId = component.Id
-							break
-						}
-					}
-
-					if status.componentId == "" {
-						log.Info().Str("identifier", identifier).Msg("Component ID not found, creating component for host")
-						// TODO: Create component
-					}
+				if componentId == "" {
+					log.Debug().Str("identifier", identifier).Msg("Component ID not found, creating component")
+					// TODO: Create component
 				}
 
 				currentComponent, err := s.instatusClient.GetComponent(instatus_go.GetComponentRequest{
 					PageId:      s.instatusPageId,
-					ComponentId: status.componentId,
+					ComponentId: componentId,
 				})
 				if err != nil {
 					log.Error().Err(err).Msg("Error getting current component status")
@@ -140,7 +134,7 @@ func (s *Server) monitorStatuses(ctx context.Context) {
 
 				_, err = s.instatusClient.UpdateComponent(instatus_go.UpdateComponentRequest{
 					PageId:      s.instatusPageId,
-					ComponentId: status.componentId,
+					ComponentId: componentId,
 					UpdatedFields: instatus_go.UpdateComponentFields{
 						Status: &newStatus,
 					},
