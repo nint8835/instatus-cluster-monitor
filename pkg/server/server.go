@@ -150,7 +150,7 @@ func (s *Server) monitorStatuses(ctx context.Context) {
 					return false
 				}
 
-				log.Debug().Str("identifier", identifier).Str("status", string(status.Status)).Msg("Component status updated")
+				log.Debug().Str("identifier", identifier).Msg("Component status updated")
 
 				return true
 			})
